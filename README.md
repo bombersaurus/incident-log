@@ -4,7 +4,8 @@ A small web app for recording security incidents at a venue: refused entries,
 ejections, medical calls and so on. Staff log what happened, supervisors can
 see everything, and every edit is kept in an audit log.
 
-All the data in it is made up.
+Built with Java, Spring Boot, Thymeleaf and an H2 database. All the data in
+it is made up.
 
 ## What it does
 
@@ -17,19 +18,18 @@ All the data in it is made up.
   after, who changed it, and when
 - Supervisors get an audit page listing every change
 
-## Run it (Windows)
+## Run it
 
-You need Python 3.11 or newer.
+You need Java 17 or newer and Maven.
 
 ```
-py -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-flask --app app seed
-flask --app app run --debug
+mvn spring-boot:run
 ```
 
-Then open http://127.0.0.1:5000 and log in. Every password is `password`.
+In IntelliJ you can skip Maven: open the folder and run
+`IncidentLogApplication`.
+
+Then open http://localhost:8080 and log in. Every password is `password`.
 
 | Username | Role |
 | --- | --- |
@@ -37,36 +37,46 @@ Then open http://127.0.0.1:5000 and log in. Every password is `password`.
 | alex | staff |
 | priya | staff |
 
-`flask --app app seed` wipes the database and loads the made-up data again,
-so you can run it whenever you want a clean start.
+The database is a file in the `data` folder. Stop the app and delete that
+folder to start again with the original made-up data.
 
 ## Run the tests
 
 ```
-pytest
+mvn test
 ```
+
+The tests also run on GitHub after every push (see the Actions tab).
 
 ## How the code is laid out
 
+Everything is in `src/main/java/incidentlog`.
+
 | File | What is in it |
 | --- | --- |
-| `app/__init__.py` | Builds the app and plugs the parts together |
-| `app/db.py` | Opens and closes the database connection |
-| `app/schema.sql` | The three tables: user, incident, audit_log |
-| `app/auth.py` | Login, logout, and the checks that protect pages |
-| `app/incidents.py` | List, search, add, view and edit incidents |
-| `app/audit.py` | Records changes and shows the audit page |
-| `app/times.py` | Converts times between the database, forms and the page |
-| `app/seed.py` | Loads the made-up users and incidents |
-| `app/templates/` | The HTML pages |
-| `tests/` | Tests for all of the above |
+| `IncidentLogApplication` | Starts the app |
+| `User`, `Incident`, `AuditEntry` | One row of each table, as a Java record |
+| `IncidentForm` | What was typed into the form, and the checks on it |
+| `Database` | Creates the tables from `tables.sql` |
+| `UserRepository`, `IncidentRepository`, `AuditRepository` | All the SQL |
+| `LoginController` | Logging in and out |
+| `LoginInterceptor`, `WebConfig` | Sends anyone not logged in to the login page |
+| `CurrentUserAdvice` | Gives every page the logged-in user |
+| `IncidentController` | List, search, add, view and edit incidents |
+| `AuditController` | The supervisor's audit page |
+| `SeedData` | Loads the made-up users and incidents |
 
-Built with Flask and SQLite. Passwords are stored hashed, never as plain text.
+The HTML pages are in `src/main/resources/templates` and the tests are in
+`src/test/java/incidentlog`.
+
+Passwords are stored as BCrypt hashes, never as plain text.
 
 ## Known gaps
 
+- Login is written by hand with sessions to keep it easy to follow. A real
+  app would use Spring Security.
 - Forms have no CSRF tokens. The login cookie is set to `SameSite=Lax`, which
   blocks the common case, but tokens would be the proper fix.
 - Nothing limits how many times someone can guess a password.
-- Times are local time with no time zone.
+- An edit and its audit rows are not saved in one transaction.
 - The list has no pages, so it would get slow with thousands of incidents.

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Incident ' + ${incident.id})}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main>
+  <h1 th:text="|Incident ${incident.id}|">Incident 1</h1>
+
+  <dl>
+    <dt>When</dt>
+    <dd th:text="${#temporals.format(incident.occurredAt, 'dd/MM/yyyy HH:mm')}">01/01/2026 20:00</dd>
+    <dt>Location</dt>
+    <dd th:text="${incident.location}">Location</dd>
+    <dt>Category</dt>
+    <dd th:text="${incident.category}">Category</dd>
+    <dt>Severity</dt>
+    <dd th:text="|${incident.severity} of 5|">1 of 5</dd>
+    <dt>Bodycam reference</dt>
+    <dd th:text="${#strings.isEmpty(incident.bodycamRef)} ? 'None' : ${incident.bodycamRef}">None</dd>
+    <dt>Reported by</dt>
+    <dd th:text="${incident.reporter}">name</dd>
+  </dl>
+
+  <h2>Description</h2>
+  <p th:utext="${incident.descriptionHtml()}">What happened.</p>
+
+  <p><a th:href="@{/incidents/{id}/edit(id=${incident.id})}">Edit this incident</a></p>
+
+  <h2>History</h2>
+  <table th:if="${!#lists.isEmpty(history)}">
+    <thead>
+      <tr><th>When</th><th>Who</th><th>Field</th><th>Before</th><th>After</th></tr>
+    </thead>
+    <tbody>
+      <tr th:each="change : ${history}">
+        <td th:text="${#temporals.format(change.changedAt, 'dd/MM/yyyy HH:mm')}">01/01/2026 20:00</td>
+        <td th:text="${change.username}">name</td>
+        <td th:text="${change.field}">field</td>
+        <td th:text="${change.oldValue}">before</td>
+        <td th:text="${change.newValue}">after</td>
+      </tr>
+    </tbody>
+  </table>
+  <p th:if="${#lists.isEmpty(history)}">No changes since it was reported.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(${heading})}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main>
+  <h1 th:text="${heading}">New incident</h1>
+
+  <p class="error" th:each="error : ${errors}" th:text="${error}">Error message</p>
+
+  <!-- No action given, so the form posts back to the address it was loaded from. -->
+  <form method="post" class="stack">
+    <label>When it happened
+      <input type="datetime-local" name="occurredAt" th:value="${form.occurredAt}" required>
+    </label>
+    <label>Location
+      <input name="location" th:value="${form.location}" maxlength="200" required>
+    </label>
+    <label>Category
+      <select name="category" required>
+        <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"
+                th:selected="${category == form.category}">Category</option>
+      </select>
+    </label>
+    <label>Severity (1 is minor, 5 is serious)
+      <select name="severity" required>
+        <option th:each="level : ${severities}" th:value="${level}" th:text="${level}"
+                th:selected="${level == form.severity}">1</option>
+      </select>
+    </label>
+    <label>What happened
+      <textarea name="description" rows="6" maxlength="4000" required th:text="${form.description}"></textarea>
+    </label>
+    <label>Bodycam reference (optional)
+      <input name="bodycamRef" th:value="${form.bodycamRef}" maxlength="50">
+    </label>
+    <button type="submit">Save</button>
+  </form>
+</main>
+</body>
+</html>

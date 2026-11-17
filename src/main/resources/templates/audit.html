@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Audit log')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main>
+  <h1>Audit log</h1>
+  <p>Every change made to an incident after it was reported.</p>
+
+  <table th:if="${!#lists.isEmpty(changes)}">
+    <thead>
+      <tr><th>When</th><th>Who</th><th>Incident</th><th>Field</th><th>Before</th><th>After</th></tr>
+    </thead>
+    <tbody>
+      <tr th:each="change : ${changes}">
+        <td th:text="${#temporals.format(change.changedAt, 'dd/MM/yyyy HH:mm')}">01/01/2026 20:00</td>
+        <td th:text="${change.username}">name</td>
+        <td><a th:href="@{/incidents/{id}(id=${change.incidentId})}" th:text="${change.incidentId}">1</a></td>
+        <td th:text="${change.field}">field</td>
+        <td th:text="${change.oldValue}">before</td>
+        <td th:text="${change.newValue}">after</td>
+      </tr>
+    </tbody>
+  </table>
+  <p th:if="${#lists.isEmpty(changes)}">Nothing has been changed yet.</p>
+</main>
+</body>
+</html>

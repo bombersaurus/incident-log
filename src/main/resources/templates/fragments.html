@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Pieces shared by every page. Pages pull them in with th:replace. -->
+
+<head th:fragment="head(title)">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="|${title} - Incident log|">Incident log</title>
+  <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+<header th:fragment="header">
+  <a class="brand" th:href="@{/}">Incident log</a>
+  <nav th:if="${currentUser != null}">
+    <a th:href="@{/}">Incidents</a>
+    <a th:href="@{/incidents/new}">New incident</a>
+    <a th:if="${currentUser.supervisor}" th:href="@{/audit}">Audit log</a>
+  </nav>
+  <form th:if="${currentUser != null}" method="post" th:action="@{/logout}" class="logout">
+    <span th:text="|${currentUser.username} (${currentUser.role})|">name (role)</span>
+    <button type="submit" class="plain">Log out</button>
+  </form>
+</header>
+</body>
+</html>
