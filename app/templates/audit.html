@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Audit log{% endblock %}
+{% block content %}
+<h1>Audit log</h1>
+<p>Every change made to an incident after it was reported.</p>
+
+{% if changes %}
+<table>
+  <thead>
+    <tr><th>When</th><th>Who</th><th>Incident</th><th>Field</th><th>Before</th><th>After</th></tr>
+  </thead>
+  <tbody>
+    {% for change in changes %}
+    <tr>
+      <td>{{ change.changed_at|display_time }}</td>
+      <td>{{ change.username }}</td>
+      <td><a href="{{ url_for('incidents.detail', incident_id=change.incident_id) }}">{{ change.incident_id }}</a></td>
+      <td>{{ change.field }}</td>
+      <td>{{ change.old_value }}</td>
+      <td>{{ change.new_value }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Nothing has been changed yet.</p>
+{% endif %}
+{% endblock %}

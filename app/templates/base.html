@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %} - Incident log</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <a class="brand" href="{{ url_for('incidents.index') }}">Incident log</a>
+    {% if g.user %}
+    <nav>
+      <a href="{{ url_for('incidents.index') }}">Incidents</a>
+      <a href="{{ url_for('incidents.create') }}">New incident</a>
+      {% if g.user.role == 'supervisor' %}
+      <a href="{{ url_for('audit.index') }}">Audit log</a>
+      {% endif %}
+    </nav>
+    <form method="post" action="{{ url_for('auth.logout') }}" class="logout">
+      <span>{{ g.user.username }} ({{ g.user.role }})</span>
+      <button type="submit" class="plain">Log out</button>
+    </form>
+    {% endif %}
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,68 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #1c1c1a;
+  background: #f6f5f1;
+}
+
+a { color: #1c1c1a; }
+a:hover { color: #8a2a12; }
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+  padding: 12px 20px;
+  border-bottom: 2px solid #1c1c1a;
+  background: #fff;
+}
+.brand { font-weight: 700; text-decoration: none; }
+nav { display: flex; gap: 16px; flex: 1; }
+.logout { display: flex; align-items: center; gap: 12px; margin: 0; color: #55544f; }
+
+main { max-width: 900px; margin: 0 auto; padding: 24px 20px 64px; }
+h1 { font-size: 1.6rem; margin: 0 0 16px; }
+h2 { font-size: 1.1rem; margin: 32px 0 8px; }
+
+table { width: 100%; border-collapse: collapse; background: #fff; }
+th, td { text-align: left; padding: 8px 10px; border: 1px solid #cfcdc4; vertical-align: top; }
+th { background: #eceae3; font-weight: 600; }
+
+dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 20px; margin: 0; }
+dt { color: #55544f; }
+dd { margin: 0; }
+
+form.stack { display: grid; gap: 14px; max-width: 560px; }
+form.narrow { max-width: 320px; }
+form.search { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 16px; }
+form.search input { flex: 1; min-width: 200px; }
+label { display: grid; gap: 4px; font-weight: 600; }
+
+input, select, textarea, button { font: inherit; }
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #8f8d84;
+  border-radius: 2px;
+  background: #fff;
+  color: inherit;
+}
+button {
+  padding: 8px 16px;
+  border: 1px solid #1c1c1a;
+  border-radius: 2px;
+  background: #1c1c1a;
+  color: #fff;
+  cursor: pointer;
+  justify-self: start;
+}
+button:hover { background: #8a2a12; border-color: #8a2a12; }
+button.plain { background: none; color: #1c1c1a; padding: 4px 10px; }
+button.plain:hover { background: none; color: #8a2a12; }
+
+.error { border-left: 4px solid #8a2a12; background: #fff; padding: 8px 12px; margin: 0 0 12px; }
